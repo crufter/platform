@@ -8,10 +8,9 @@ require (
 	github.com/dghubble/sessions v0.1.0 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/micro/go-micro v1.18.1-0.20200123215758-eeb6944ce5ae
+	github.com/micro/go-micro v1.18.1-0.20200126191206-1108cc5e91fd
 	github.com/micro/micro v1.18.1-0.20200123150258-806d0dbc6970
-	github.com/micro/protoc-gen-micro v1.0.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20191202225959-858c2ad4c8b6
 )
 
-replace github.com/micro/micro => github.com/micro/micro v1.18.1-0.20200123150258-806d0dbc6970
+replace github.com/micro/micro => /home/crufter/code/src/github.com/micro/micro
