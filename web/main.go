@@ -102,9 +102,9 @@ func issueSession() http.Handler {
 			Name:    "token",
 			Value:   token,
 			Expires: expire,
+			Path:    "/",
 		})
-		// hack because Chrome does not respect cookies on redirects
-		write(w, "text/html", 200, `<script>window.location.href="`+os.Getenv("FRONTEND_ADDRESS")+`"</script>`)
+		http.Redirect(w, req, os.Getenv("FRONTEND_ADDRESS"), http.StatusFound)
 	}
 	return http.HandlerFunc(fn)
 }
