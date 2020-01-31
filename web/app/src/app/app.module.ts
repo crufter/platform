@@ -49,6 +49,7 @@ import { LogUserInComponent } from "./log-user-in/log-user-in.component";
 
 import { ClipboardModule } from "ngx-clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+import { NotInvitedComponent } from './not-invited/not-invited.component';
 
 /**
  * Import specific languages to avoid importing everything
@@ -74,7 +75,8 @@ export function getHighlightLanguages() {
     SearchPipe,
     NewServiceComponent,
     WelcomeComponent,
-    LogUserInComponent
+    LogUserInComponent,
+    NotInvitedComponent
   ],
   imports: [
     BrowserModule,

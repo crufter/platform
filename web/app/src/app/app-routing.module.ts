@@ -6,6 +6,7 @@ import { ServiceComponent } from "./service/service.component";
 import { NewServiceComponent } from "./new-service/new-service.component";
 import { AuthGuard } from "./auth.guard";
 import { WelcomeComponent } from "./welcome/welcome.component";
+import { NotInvitedComponent } from "./not-invited/not-invited.component";
 
 const routes: Routes = [
   {
@@ -14,7 +15,11 @@ const routes: Routes = [
     pathMatch: "full",
     canActivate: [AuthGuard]
   },
-  { path: "login", component: LoginComponent },
+  {
+    path: "not-invited",
+    component: NotInvitedComponent
+  },
+  //{ path: "login", component: LoginComponent },
   { path: "services", component: ServicesComponent, canActivate: [AuthGuard] },
   {
     path: "service/new",
