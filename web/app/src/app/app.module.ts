@@ -44,6 +44,11 @@ import { NewServiceComponent } from './new-service/new-service.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { ChartsModule } from 'ng2-charts';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { LogUserInComponent } from './log-user-in/log-user-in.component';
+
+import { ClipboardModule } from 'ngx-clipboard';
+import { HighlightModule } from 'ngx-highlightjs';
 
 @NgModule({
   declarations: [
@@ -54,7 +59,9 @@ import { ChartsModule } from 'ng2-charts';
     ServicesComponent,
     ServiceComponent,
     SearchPipe,
-    NewServiceComponent
+    NewServiceComponent,
+    WelcomeComponent,
+    LogUserInComponent
   ],
   imports: [
     BrowserModule,
@@ -79,7 +86,9 @@ import { ChartsModule } from 'ng2-charts';
     MatExpansionModule,
     MatProgressBarModule,
     NgxChartsModule,
-    ChartsModule
+    ChartsModule,
+    ClipboardModule,
+    HighlightModule
   ],
   providers: [CookieService, UserService],
   bootstrap: [AppComponent]
