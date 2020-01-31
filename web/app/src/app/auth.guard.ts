@@ -26,15 +26,13 @@ export class AuthGuard implements CanActivate {
     if (this.us.loggedIn()) {
       return true
     }
-    console.log("subscribin")
     return new Observable<boolean>((observer) => {
       this.us.isUserLoggedIn.subscribe(loggedIn => {
         if (loggedIn) {
-          
           observer.next(true)
         } else {
-          console.log("auth guard")
-          confirm("redirect") ? window.location.href = environment.backendUrl + "/v1/github/login" : console.log("stopping")
+          // confirm("redirect") ? window.location.href = environment.backendUrl + "/v1/github/login" : console.log("stopping")
+          environment.backendUrl + "/v1/github/login"
           observer.next(false)
         }
         observer.complete()

@@ -74,11 +74,11 @@ func issueSession() http.Handler {
 		membership, _, err := client.Teams.GetTeamMembership(context.TODO(), teamID, githubUser.GetLogin())
 		if err != nil {
 			log.Println(err)
-			http.Redirect(w, req, os.Getenv("FRONTEND_ADDRESS")+"/login?not_authorized=true", http.StatusFound)
+			http.Redirect(w, req, os.Getenv("FRONTEND_ADDRESS")+"/not-invited", http.StatusFound)
 			return
 		}
 		if membership.GetState() != "active" {
-			http.Redirect(w, req, os.Getenv("FRONTEND_ADDRESS")+"/login?not_authorized=true", http.StatusFound)
+			http.Redirect(w, req, os.Getenv("FRONTEND_ADDRESS")+"/not-invited", http.StatusFound)
 			return
 		}
 		token := uuid.New().String()

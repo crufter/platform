@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-welcome',
@@ -6,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent implements OnInit {
-  code = "micro login --token YOUR_TOKEN"
-  constructor() { }
+  code = ""
+
+  constructor(
+    public us: UserService
+  ) {
+  }
 
   ngOnInit() {
+    this.code = "micro login --token " + this.us.token()
   }
 
 }

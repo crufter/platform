@@ -1,4 +1,4 @@
-.mat-form-field-empty.mat-form-field-label {
-    color: rgb(255, 255, 255);
-    background: #000;
+.container {
+    width: 66%;
+    margin: auto;
 }

@@ -40,15 +40,28 @@ import { SimpleNotificationsModule } from "angular2-notifications";
 import { ServiceComponent } from "./service/service.component";
 import { FormsModule } from "@angular/forms";
 import { SearchPipe } from "./search.pipe";
-import { NewServiceComponent } from './new-service/new-service.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NewServiceComponent } from "./new-service/new-service.component";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
 
-import { ChartsModule } from 'ng2-charts';
-import { WelcomeComponent } from './welcome/welcome.component';
-import { LogUserInComponent } from './log-user-in/log-user-in.component';
+import { ChartsModule } from "ng2-charts";
+import { WelcomeComponent } from "./welcome/welcome.component";
+import { LogUserInComponent } from "./log-user-in/log-user-in.component";
 
-import { ClipboardModule } from 'ngx-clipboard';
-import { HighlightModule } from 'ngx-highlightjs';
+import { ClipboardModule } from "ngx-clipboard";
+import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+
+/**
+ * Import specific languages to avoid importing everything
+ * The following will lazy load highlight.js core script (~9.6KB) + the selected languages bundle (each lang. ~1kb)
+ */
+export function getHighlightLanguages() {
+  return {
+    typescript: () => import("highlight.js/lib/languages/typescript"),
+    css: () => import("highlight.js/lib/languages/css"),
+    xml: () => import("highlight.js/lib/languages/xml"),
+    bash: () => import("highlight.js/lib/languages/bash")
+  };
+}
 
 @NgModule({
   declarations: [
@@ -90,7 +103,16 @@ import { HighlightModule } from 'ngx-highlightjs';
     ClipboardModule,
     HighlightModule
   ],
-  providers: [CookieService, UserService],
+  providers: [
+    CookieService,
+    UserService,
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        languages: getHighlightLanguages()
+      }
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
