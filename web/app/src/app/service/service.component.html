@@ -63,7 +63,7 @@
       </mat-tab>
       <mat-tab label="Stats">
         <br />
-        <div  style="display:flex; flex-direction:column;">
+        <div style="display:flex; flex-direction:column;">
           <div style="flex-grow:1; height:300px; position:relative">
             <canvas
               baseChart
@@ -119,6 +119,9 @@
       <mat-tab label="Nodes">
         <br />
         Nodes coming soon.
+      </mat-tab>
+      <mat-tab label="Trace">
+        <google-chart *ngIf="traceData" [data]="traceData"></google-chart>
       </mat-tab>
     </mat-tab-group>
   </mat-card>

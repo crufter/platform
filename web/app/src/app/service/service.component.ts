@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { ServiceService } from "../service.service";
 import * as types from "../types";
 import { ActivatedRoute } from "@angular/router";
+import * as _ from "lodash";
 
 @Component({
   selector: "app-service",
@@ -16,7 +17,8 @@ export class ServiceComponent implements OnInit {
   services: types.Service[];
   logs: types.LogRecord[];
   stats: types.DebugSnapshot[];
-  trace: types.TraceSnapshot[];
+  traceSpans: types.Span[];
+  traceData: any = {};
   serviceName: string;
   endpointQuery: string;
   intervalId: any;
@@ -42,9 +44,41 @@ export class ServiceComponent implements OnInit {
         this.stats = stats;
         this.processStats();
       });
-      this.ses.trace(this.serviceName).then(trace => {
-        this.trace = trace;
-      })
+      this.ses.trace().then(spans => {
+        this.traceSpans = spans;
+
+        const groupedSpans = _.groupBy(_.uniqBy(spans, "id"), "trace");
+        console.log(groupedSpans);
+        const deeps = _.values(groupedSpans).filter(spans => spans.length > 1);
+        const deepSpans = _.flatten(deeps);
+        const parentLess = deepSpans.filter(sp => {
+          if (!sp) {
+            return false;
+          }
+          return spans.filter(sp1 => sp1 && sp.parent == sp1.id).length == 0;
+        });
+        console.log("spans without a parent ", parentLess);
+        console.log("Traces with multiple values: ", deeps);
+        const spansToDisplay = deeps[0].map(d => {
+          return [
+            d.name,
+            new Date(d.started / 1000000),
+            new Date((d.started + d.duration) / 1000000 + 1000)
+          ];
+        });
+        console.log("charting: ", deeps[0], spansToDisplay)
+        this.traceData = {
+          chartType: "Timeline",
+          dataTable: ([["Name", "From", "To"]] as any[][]).concat(
+            spansToDisplay
+          ),
+          options: {
+            minValue: spansToDisplay[0][1],
+            maxValue: spansToDisplay[spansToDisplay.length - 1][2]
+          }
+        };
+        console.log("Trace chart data: ", this.traceData);
+      });
       this.intervalId = setInterval(() => {
         this.ses.stats(this.serviceName).then(stats => {
           this.stats = stats;
@@ -79,14 +113,16 @@ ${indent}}`;
 
   // Stats/ Chart related things
 
+  processTraces() {}
+
   processStats() {
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
     }
     const STAT_WINDOW = 8 * 60 * 1000; /* ms */
     this.stats = this.stats.filter(stat => {
-      return Date.now() - (stat.timestamp * 1000 ) < STAT_WINDOW
-    })
+      return Date.now() - stat.timestamp * 1000 < STAT_WINDOW;
+    });
     const nodes = this.stats
       .map(stat => stat.service.node.id)
       .filter(onlyUnique);
@@ -207,9 +243,7 @@ ${indent}}`;
               const first = this.stats[0].gc ? this.stats[0].gc : 0;
               value = this.stats[1].gc - first;
             } else {
-              const prev = this.stats[i - 1].gc
-                ? this.stats[i - 1].gc
-                : 0;
+              const prev = this.stats[i - 1].gc ? this.stats[i - 1].gc : 0;
               value = this.stats[i].gc - prev;
             }
             return {
@@ -224,7 +258,7 @@ ${indent}}`;
   // config options taken from https://www.chartjs.org/samples/latest/scales/time/financial.html
   options(ylabel: string, distribution?: string) {
     if (!distribution) {
-      distribution = "series"
+      distribution = "series";
     }
     return {
       options: {

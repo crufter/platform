@@ -51,6 +51,8 @@ import { ClipboardModule } from "ngx-clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { NotInvitedComponent } from './not-invited/not-invited.component';
 
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+
 /**
  * Import specific languages to avoid importing everything
  * The following will lazy load highlight.js core script (~9.6KB) + the selected languages bundle (each lang. ~1kb)
@@ -103,7 +105,8 @@ export function getHighlightLanguages() {
     NgxChartsModule,
     ChartsModule,
     ClipboardModule,
-    HighlightModule
+    HighlightModule,
+    Ng2GoogleChartsModule
   ],
   providers: [
     CookieService,
