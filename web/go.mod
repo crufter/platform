@@ -12,7 +12,3 @@ require (
 	github.com/micro/micro/v2 v2.0.0-00010101000000-000000000000
 	golang.org/x/oauth2 v0.0.0-20191202225959-858c2ad4c8b6
 )
-
-replace github.com/micro/go-micro/v2 => /home/crufter/code/src/github.com/micro/go-micro
-
-replace github.com/micro/micro/v2 => /home/crufter/code/src/github.com/micro/micro
