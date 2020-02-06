@@ -139,7 +139,11 @@ ${indent}}`;
         dataTable: ([["Name", "From", "To"]] as any[][]).concat(spansToDisplay),
         options: {
           height: h,
+          timeline: {
+            tooltipDateFormat: 'HH:mm:ss.SSS',
+          },
           hAxis: {
+            format: 'yyyy-MM-dd HH:mm:ss.SSS',
             minValue: new Date((spansToDisplay[0][1] as Date).getTime() - 500),
             maxValue: new Date(
               (spansToDisplay[spansToDisplay.length - 1][2] as Date).getTime() +
