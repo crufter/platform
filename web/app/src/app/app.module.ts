@@ -28,6 +28,7 @@ import {
   MatExpansionModule,
   MatProgressBarModule
 } from "@angular/material";
+import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatListModule } from "@angular/material";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { LoginComponent } from "./login/login.component";
@@ -49,9 +50,9 @@ import { LogUserInComponent } from "./log-user-in/log-user-in.component";
 
 import { ClipboardModule } from "ngx-clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
-import { NotInvitedComponent } from './not-invited/not-invited.component';
+import { NotInvitedComponent } from "./not-invited/not-invited.component";
 
-import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+import { Ng2GoogleChartsModule } from "ng2-google-charts";
 
 /**
  * Import specific languages to avoid importing everything
@@ -106,7 +107,8 @@ export function getHighlightLanguages() {
     ChartsModule,
     ClipboardModule,
     HighlightModule,
-    Ng2GoogleChartsModule
+    Ng2GoogleChartsModule,
+    MatPaginatorModule
   ],
   providers: [
     CookieService,
