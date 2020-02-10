@@ -53,6 +53,21 @@ func issueSession() http.Handler {
 		tc := oauth2.NewClient(ctx, ts)
 		client := githubApi.NewClient(tc)
 
+		// Have to list the emails separately as users with a private email address
+		// will not have an email in githubUser.Email
+		emails, _, err := client.Users.ListEmails(ctx, nil)
+		if err != nil {
+			write500(w, err)
+			return
+		}
+		primaryEmail := ""
+		for _, email := range emails {
+			if email.GetPrimary() {
+				primaryEmail = email.GetEmail()
+			}
+		}
+		githubUser.Email = &primaryEmail
+
 		teamID, err := strconv.ParseInt(os.Getenv("GITHUB_TEAM_ID"), 10, 64)
 		if err != nil {
 			write500(w, err)
@@ -68,7 +83,6 @@ func issueSession() http.Handler {
 			http.Redirect(w, req, os.Getenv("FRONTEND_ADDRESS")+"/not-invited", http.StatusFound)
 			return
 		}
-
 		acc, err := auth.DefaultAuth.Generate(*githubUser.Email, auth.Metadata(
 			map[string]string{
 				"email": *githubUser.Email,
@@ -77,6 +91,10 @@ func issueSession() http.Handler {
 		))
 		if err != nil {
 			write500(w, err)
+			return
+		}
+		if acc == nil {
+			write500(w, errors.New("Account is empty"))
 			return
 		}
 
@@ -239,6 +257,14 @@ func userHandler(w http.ResponseWriter, req *http.Request) {
 		write400(w, err)
 		return
 	}
+	if acc == nil {
+		write400(w, errors.New("Not found"))
+		return
+	}
+	if acc.Metadata == nil {
+		write400(w, errors.New("Metadata not found"))
+		return
+	}
 
 	writeJSON(w, &User{
 		Name:  acc.Metadata["name"],
@@ -255,7 +281,7 @@ func main() {
 		ClientSecret: os.Getenv("GITHUB_OAUTH_CLIENT_SECRET"),
 		RedirectURL:  os.Getenv("GITHUB_OAUTH_REDIRECT_URL"),
 		Endpoint:     githubOAuth2.Endpoint,
-		Scopes:       []string{"read:org"},
+		Scopes:       []string{"user:email", "read:org"},
 	}
 	// state param cookies require HTTPS by default; disable for localhost development
 	stateConfig := gologin.DebugOnlyCookieConfig
