@@ -4,6 +4,7 @@ import * as types from "../types";
 import { ActivatedRoute } from "@angular/router";
 import { Subject } from "rxjs";
 import * as _ from "lodash";
+import { DiffEditorModel } from "ngx-monaco-editor";
 
 @Component({
   selector: "app-service",
@@ -68,6 +69,11 @@ export class ServiceComponent implements OnInit {
       this.serviceName = <string>p["id"];
       this.ses.list().then(servs => {
         this.services = servs.filter(s => s.name == this.serviceName);
+        this.services.forEach(service => {
+          service.endpoints.forEach(endpoint => {
+            endpoint.requestJSON = this.valueToJson(endpoint.request, 1);
+          });
+        });
       });
       this.ses.logs(this.serviceName).then(logs => {
         this.logs = logs;
@@ -119,9 +125,49 @@ ${input.values
   .map(field => this.valueToString(field, indentLevel + 1))
   .join(fieldSeparator)}
 ${indent}}`;
+    } else if (indentLevel == 1) {
+      return `${indent}${input.type} ${input.name} {}`;
     }
 
     return `${indent}${input.type} ${input.name}`;
+  }
+
+  // This is admittedly a horrible temporary implementation
+  valueToJson(input: types.Value, indentLevel: number): string {
+    const typeToDefault = (type: string): string => {
+      switch (type) {
+        case "string":
+          return '""';
+        case "int":
+        case "int32":
+        case "int64":
+          return "0";
+        case "bool":
+          return "false";
+        default:
+          return "{}";
+      }
+    };
+
+    if (!input) return "";
+
+    const indent = Array(indentLevel).join("    ");
+    const fieldSeparator = `,\n`;
+    if (input.values) {
+      return `${indent}${indentLevel == 1 ? "{" : "\"" + input.name + "\": {"}
+${input.values
+  .map(field => this.valueToJson(field, indentLevel + 1))
+  .join(fieldSeparator)}
+${indent}}`;
+    } else if (indentLevel == 1) {
+      return `{}`;
+    }
+
+    return `${indent}"${input.name}": ${typeToDefault(input.type)}`;
+  }
+
+  callEndpoint(endpoint: types.Endpoint) {
+    
   }
 
   // Stats/ Chart related things
@@ -428,4 +474,11 @@ ${indent}}`;
   errorRates = this.options("errors/second");
   concurrencyRates = this.options("goroutines");
   gcRates = this.options("garbage collection (nanoseconds/seconds)");
+
+  // code editor
+  coptions = {
+    theme: "vs-dark"
+  };
+
+  code: string = "{}";
 }
