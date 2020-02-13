@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/v2/client"
 	"github.com/micro/go-micro/v2/config/cmd"
 	micro_errors "github.com/micro/go-micro/v2/errors"
+	"github.com/micro/go-micro/v2/metadata"
 	"github.com/micro/go-micro/v2/registry"
 	"github.com/micro/go-micro/v2/web"
 	logproto "github.com/micro/micro/v2/debug/log/proto"
@@ -51,7 +51,6 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-
 	defer r.Body.Close()
 
 	var service, endpoint, address string
@@ -124,7 +123,6 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 	// create request/response
 	var response json.RawMessage
 	var err error
-
 	req := (*cmd.DefaultOptions().Client).NewRequest(service, endpoint, request, client.WithContentType("application/json"))
 
 	requestToContext := func(r *http.Request) context.Context {
@@ -151,7 +149,6 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 	if len(address) > 0 {
 		opts = append(opts, client.WithAddress(address))
 	}
-
 	// remote call
 	err = (*cmd.DefaultOptions().Client).Call(ctx, req, &response, opts...)
 	if err != nil {
@@ -170,7 +167,6 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(ce.Error()))
 		return
 	}
-
 	b, err := response.MarshalJSON()
 	if err != nil {
 		utils.Write500(w, err)
