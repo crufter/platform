@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/micro/go-micro/v2/client"
+	cl "github.com/micro/go-micro/v2/client"
 	micro_errors "github.com/micro/go-micro/v2/errors"
 	"github.com/micro/go-micro/v2/metadata"
 	"github.com/micro/go-micro/v2/registry"
@@ -123,7 +123,8 @@ func callHandler(serv web.Service) func(http.ResponseWriter, *http.Request) {
 		// create request/response
 		var response json.RawMessage
 		var err error
-		req := client.NewRequest(service, endpoint, request, client.WithContentType("application/json"))
+		client := serv.Options().Service.Client()
+		req := client.NewRequest(service, endpoint, request, cl.WithContentType("application/json"))
 
 		requestToContext := func(r *http.Request) context.Context {
 			ctx := context.Background()
@@ -137,20 +138,20 @@ func callHandler(serv web.Service) func(http.ResponseWriter, *http.Request) {
 		// create context
 		ctx := requestToContext(r)
 
-		var opts []client.CallOption
+		var opts []cl.CallOption
 
 		timeout, _ := strconv.Atoi(r.Header.Get("Timeout"))
 		// set timeout
 		if timeout > 0 {
-			opts = append(opts, client.WithRequestTimeout(time.Duration(timeout)*time.Second))
+			opts = append(opts, cl.WithRequestTimeout(time.Duration(timeout)*time.Second))
 		}
 
 		// remote call
 		if len(address) > 0 {
-			opts = append(opts, client.WithAddress(address))
+			opts = append(opts, cl.WithAddress(address))
 		}
 		// remote call
-		err = serv.Options().Service.Client().Call(ctx, req, &response, opts...)
+		err = client.Call(ctx, req, &response, opts...)
 		if err != nil {
 			ce := micro_errors.Parse(err.Error())
 			switch ce.Code {
@@ -221,11 +222,12 @@ func logsHandler(service web.Service) func(http.ResponseWriter, *http.Request) {
 			utils.Write400(w, errors.New("Service missing"))
 			return
 		}
+		client := service.Options().Service.Client()
 		request := client.NewRequest("go.micro.debug", "Log.Read", &logproto.ReadRequest{
 			Service: serviceName,
 		})
 		rsp := &logproto.ReadResponse{}
-		if err := service.Options().Service.Client().Call(req.Context(), request, rsp); err != nil {
+		if err := client.Call(req.Context(), request, rsp); err != nil {
 			utils.Write500(w, err)
 			return
 		}
@@ -248,6 +250,7 @@ func statsHandler(service web.Service) func(http.ResponseWriter, *http.Request) 
 			utils.Write400(w, errors.New("Service missing"))
 			return
 		}
+		client := service.Options().Service.Client()
 		request := client.NewRequest("go.micro.debug", "Stats.Read", &statsproto.ReadRequest{
 			Service: &statsproto.Service{
 				Name: serviceName,
@@ -255,7 +258,7 @@ func statsHandler(service web.Service) func(http.ResponseWriter, *http.Request) 
 			Past: true,
 		})
 		rsp := &statsproto.ReadResponse{}
-		if err := service.Options().Service.Client().Call(req.Context(), request, rsp); err != nil {
+		if err := client.Call(req.Context(), request, rsp); err != nil {
 			utils.Write500(w, err)
 			return
 		}
@@ -291,9 +294,10 @@ func tracesHandler(service web.Service) func(http.ResponseWriter, *http.Request)
 			}
 			reqProto.Limit = limit
 		}
+		client := service.Options().Service.Client()
 		request := client.NewRequest("go.micro.debug", "Trace.Read", reqProto)
 		rsp := &traceproto.ReadResponse{}
-		if err := service.Options().Service.Client().Call(req.Context(), request, rsp); err != nil {
+		if err := client.Call(req.Context(), request, rsp); err != nil {
 			utils.Write500(w, err)
 			return
 		}
