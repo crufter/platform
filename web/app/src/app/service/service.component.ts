@@ -488,7 +488,8 @@ ${indent}}`;
 
   // code editor
   coptions = {
-    theme: "vs-dark"
+    theme: "vs-dark",
+    language: "json",
   };
 
   code: string = "{}";

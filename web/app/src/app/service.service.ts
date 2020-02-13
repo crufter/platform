@@ -91,6 +91,8 @@ export class ServiceService {
         .toPromise()
         .then(response => {
           resolve(JSON.stringify(response, null, "  "));
+        }).catch(e => {
+          resolve(e);
         });
     });
   }
