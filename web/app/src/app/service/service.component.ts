@@ -5,6 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Subject } from "rxjs";
 import * as _ from "lodash";
 import { DiffEditorModel } from "ngx-monaco-editor";
+import { environment } from "../../environments/environment";
 
 @Component({
   selector: "app-service",
@@ -154,7 +155,7 @@ ${indent}}`;
     const indent = Array(indentLevel).join("    ");
     const fieldSeparator = `,\n`;
     if (input.values) {
-      return `${indent}${indentLevel == 1 ? "{" : "\"" + input.name + "\": {"}
+      return `${indent}${indentLevel == 1 ? "{" : '"' + input.name + '": {'}
 ${input.values
   .map(field => this.valueToJson(field, indentLevel + 1))
   .join(fieldSeparator)}
@@ -166,8 +167,18 @@ ${indent}}`;
     return `${indent}"${input.name}": ${typeToDefault(input.type)}`;
   }
 
-  callEndpoint(endpoint: types.Endpoint) {
-    
+  callEndpoint(service: types.Service, endpoint: types.Endpoint) {
+    this.ses
+      .call({
+        endpoint: endpoint.name,
+        service: service.name,
+        address: service.nodes[0].address,
+        method: "POST",
+        request: endpoint.requestJSON
+      })
+      .then(rsp => {
+        endpoint.responseJSON = rsp;
+      });
   }
 
   // Stats/ Chart related things
