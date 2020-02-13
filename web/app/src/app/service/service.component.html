@@ -111,57 +111,52 @@
             >
           </div>
           <br />
-          <div style="display:flex; flex-direction:column;">
-            <div style="flex-grow:1; height:300px; position:relative">
+          <div fxLayout="row wrap" fxLayoutAlign="space-between">
+            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
               <canvas
                 *ngIf="requestRates.data.length > 0"
                 baseChart
-                width="400"
-                height="400"
+                [colors]="requestRates.chartColors"
                 [datasets]="requestRates.data"
                 [options]="requestRates.options"
                 [chartType]="requestRates.lineChartType"
               ></canvas>
             </div>
-            <div style="flex-grow:1; height:300px; position:relative">
+            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
               <canvas
                 *ngIf="memoryRates.data.length > 0"
                 baseChart
-                width="400"
-                height="400"
+                [colors]="memoryRates.chartColors"
                 [datasets]="memoryRates.data"
                 [options]="memoryRates.options"
                 [chartType]="memoryRates.lineChartType"
               ></canvas>
             </div>
-            <div style="flex-grow:1; height:300px; position:relative">
+            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
               <canvas
                 *ngIf="errorRates.data.length > 0"
                 baseChart
-                width="400"
-                height="400"
+                [colors]="errorRates.chartColors"
                 [datasets]="errorRates.data"
                 [options]="errorRates.options"
                 [chartType]="errorRates.lineChartType"
               ></canvas>
             </div>
-            <div style="flex-grow:1; height:300px; position:relative">
+            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
               <canvas
                 *ngIf="concurrencyRates.data.length > 0"
                 baseChart
-                width="400"
-                height="400"
+                [colors]="concurrencyRates.chartColors"
                 [datasets]="concurrencyRates.data"
                 [options]="concurrencyRates.options"
                 [chartType]="concurrencyRates.lineChartType"
               ></canvas>
             </div>
-            <div style="flex-grow:1; height:300px; position:relative">
+            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
               <canvas
                 *ngIf="gcRates.data.length > 0"
                 baseChart
-                width="400"
-                height="400"
+                [colors]="gcRates.chartColors"
                 [datasets]="gcRates.data"
                 [options]="gcRates.options"
                 [chartType]="gcRates.lineChartType"

@@ -121,13 +121,13 @@ export class ServiceComponent implements OnInit {
     const fieldSeparator = `,\n`;
 
     if (input.values) {
-      return `${indent}${input.type} ${input.name} {
+      return `${indent}${input.type} ${indentLevel == 1 ? "" : input.name} {
 ${input.values
   .map(field => this.valueToString(field, indentLevel + 1))
   .join(fieldSeparator)}
 ${indent}}`;
     } else if (indentLevel == 1) {
-      return `${indent}${input.type} ${input.name} {}`;
+      return `${indent}${input.name} {}`;
     }
 
     return `${indent}${input.type} ${input.name}`;
@@ -192,10 +192,7 @@ ${indent}}`;
 
   traceDuration(spans: (String | Date)[][]): string {
     const durations = spans.slice(1).map(span => {
-      return (
-        (span[3] as Date).getTime() -
-        (span[2] as Date).getTime()
-      );
+      return (span[3] as Date).getTime() - (span[2] as Date).getTime();
     });
 
     return this.prettyTime(durations.reduce((a, b) => a + b, 0));
@@ -203,8 +200,10 @@ ${indent}}`;
 
   getEndpointName(service: types.Service, spans: (String | Date)[][]): string {
     return (spans.slice(1).filter(span => {
-      return (span[1] as string).includes(service.name)
-    })[0][1] as string).split(":")[1].split(" ")[1]
+      return (span[1] as string).includes(service.name);
+    })[0][1] as string)
+      .split(":")[1]
+      .split(" ")[1];
   }
 
   processTraces(spans: types.Span[]) {
@@ -300,12 +299,12 @@ ${indent}}`;
     this.requestRates.data = nodes.map(node => {
       return {
         label: node,
+        name: node,
         type: "line",
         pointRadius: 0,
         fill: false,
         lineTension: 0,
         borderWidth: 2,
-        fillcolor: "rgba(220,220,220,0.8)",
         data: this.stats
           .filter(stat => stat.service.node.id == node)
           .map((stat, i) => {
@@ -401,6 +400,7 @@ ${indent}}`;
     this.gcRates.data = nodes.map(node => {
       return {
         label: node,
+        name: node,
         type: "line",
         pointRadius: 0,
         fill: false,
@@ -484,6 +484,26 @@ ${indent}}`;
         }
       },
       data: [],
+      chartColors: [
+        {
+          // first color
+          backgroundColor: "rgba(10,24,225,0.6)",
+          borderColor: "rgba(10,24,225,0.6)",
+          pointBackgroundColor: "rgba(10,24,225,0.6)",
+          pointBorderColor: "#fff",
+          pointHoverBackgroundColor: "#fff",
+          pointHoverBorderColor: "rgba(10,24,225,0.6)"
+        },
+        {
+          // second color
+          backgroundColor: "rgba(10,24,225,0.6)",
+          borderColor: "rgba(10,24,225,0.6)",
+          pointBackgroundColor: "rgba(10,24,225,0.6)",
+          pointBorderColor: "#fff",
+          pointHoverBackgroundColor: "#fff",
+          pointHoverBorderColor: "rgba(10,24,225,0.6)"
+        }
+      ],
       lineChartType: "line"
     };
   }
@@ -496,7 +516,7 @@ ${indent}}`;
   // code editor
   coptions = {
     theme: "vs-dark",
-    language: "json",
+    language: "json"
   };
 
   code: string = "{}";
