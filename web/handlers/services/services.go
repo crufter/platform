@@ -42,6 +42,12 @@ type rpcRequest struct {
 // RPC Handler passes on a JSON or form encoded RPC request to
 // a service.
 func rpc(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if r := recover(); r != nil {
+			rsp := map[string]interface{}{"error": r}
+			utils.WriteJSON(w, rsp)
+		}
+	}()
 	utils.SetupResponse(&w, r)
 	if r.Method == "OPTIONS" {
 		return
