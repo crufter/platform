@@ -42,12 +42,6 @@ type rpcRequest struct {
 // RPC Handler passes on a JSON or form encoded RPC request to
 // a service.
 func rpc(w http.ResponseWriter, r *http.Request) {
-	defer func() {
-		if r := recover(); r != nil {
-			rsp := map[string]interface{}{"error": r}
-			utils.WriteJSON(w, rsp)
-		}
-	}()
 	utils.SetupResponse(&w, r)
 	if r.Method == "OPTIONS" {
 		return
@@ -57,13 +51,11 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
 	defer r.Body.Close()
 
 	var service, endpoint, address string
 	var request interface{}
-
-	// response content type
-	w.Header().Set("Content-Type", "application/json")
 
 	ct := r.Header.Get("Content-Type")
 
@@ -91,7 +83,6 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 		if len(endpoint) == 0 {
 			endpoint = rpcReq.Method
 		}
-
 		// JSON as string
 		if req, ok := rpcReq.Request.(string); ok {
 			d := json.NewDecoder(strings.NewReader(req))
@@ -133,6 +124,7 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 	// create request/response
 	var response json.RawMessage
 	var err error
+
 	req := (*cmd.DefaultOptions().Client).NewRequest(service, endpoint, request, client.WithContentType("application/json"))
 
 	requestToContext := func(r *http.Request) context.Context {
@@ -159,6 +151,7 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 	if len(address) > 0 {
 		opts = append(opts, client.WithAddress(address))
 	}
+
 	// remote call
 	err = (*cmd.DefaultOptions().Client).Call(ctx, req, &response, opts...)
 	if err != nil {
@@ -177,6 +170,7 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(ce.Error()))
 		return
 	}
+
 	b, err := response.MarshalJSON()
 	if err != nil {
 		utils.Write500(w, err)
