@@ -193,11 +193,18 @@ ${indent}}`;
   traceDuration(spans: (String | Date)[][]): string {
     const durations = spans.slice(1).map(span => {
       return (
-        (span[3] as Date).getMilliseconds() -
-        (span[2] as Date).getMilliseconds()
+        (span[3] as Date).getTime() -
+        (span[2] as Date).getTime()
       );
     });
+
     return this.prettyTime(durations.reduce((a, b) => a + b, 0));
+  }
+
+  getEndpointName(service: types.Service, spans: (String | Date)[][]): string {
+    return (spans.slice(1).filter(span => {
+      return (span[1] as string).includes(service.name)
+    })[0][1] as string).split(":")[1].split(" ")[1]
   }
 
   processTraces(spans: types.Span[]) {
