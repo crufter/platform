@@ -257,8 +257,8 @@ func statsHandler(service web.Service) func(http.ResponseWriter, *http.Request) 
 			},
 			Past: true,
 		}
-		version := eq.URL.Query().Get("version")
-		if len(version) {
+		version := req.URL.Query().Get("version")
+		if len(version) > 0 {
 			preq.Service.Version = version
 		}
 		request := client.NewRequest("go.micro.debug", "Stats.Read", preq)
