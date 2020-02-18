@@ -99,6 +99,12 @@ export class ServiceComponent implements OnInit {
     });
   }
 
+  pickVersion(services: types.Service[]): types.Service[] {
+    return services.filter(s => {
+      return s.version == this.selectedVersion;
+    });
+  }
+
   loadVersionData() {
     this.ses.logs(this.serviceName).then(logs => {
       this.logs = logs;
@@ -131,7 +137,8 @@ export class ServiceComponent implements OnInit {
       this.selectedVersion = "";
       return;
     }
-    return (this.selectedVersion = service.version);
+    this.selectedVersion = service.version;
+    this.loadVersionData();
   }
 
   tabChange($event: number) {
