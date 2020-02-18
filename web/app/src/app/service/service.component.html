@@ -2,7 +2,7 @@
   <mat-spinner
     [diameter]="70"
     style="margin: auto;"
-    *ngIf="!services"
+  *ngIf="!services"
   ></mat-spinner>
 </div>
 <div *ngIf="services" style="margin: auto;">
@@ -92,7 +92,11 @@
                   <mat-tab label="Call">
                     <ng-template matTabContent>
                       <br />
-                      <div fxLayout="row" fxLayoutGap="1em">
+                      <div
+                        fxLayout.lt-md="column"
+                        fxLayout="row"
+                        fxLayoutGap="1em"
+                      >
                         <div fxFlex="calc(50% - 0.5em)">
                           Request<br /><br />
                           <ngx-monaco-editor
@@ -140,9 +144,14 @@
             >
           </div>
           <br />
-          <div fxLayout="row wrap" fxLayoutAlign="space-between">
-            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
-              <canvas
+          <div
+ 
+            fxLayout.lt-md="column wrap"
+            fxLayout="row wrap"
+            fxLayoutAlign="space-between"
+          >
+            <div style="margin-bottom: 2em;">
+              <canvas fxFlex.lt-md="100%" fxFlex="48%"
                 *ngIf="requestRates.data.length > 0"
                 baseChart
                 [colors]="requestRates.chartColors"
@@ -151,7 +160,7 @@
                 [chartType]="requestRates.lineChartType"
               ></canvas>
             </div>
-            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
+            <div fxFlex="48%" style="margin-bottom: 2em; ">
               <canvas
                 *ngIf="errorRates.data.length > 0"
                 baseChart
@@ -161,7 +170,7 @@
                 [chartType]="errorRates.lineChartType"
               ></canvas>
             </div>
-            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
+            <div fxFlex="48%" style="margin-bottom: 2em; ">
               <canvas
                 *ngIf="memoryRates.data.length > 0"
                 baseChart
@@ -171,7 +180,7 @@
                 [chartType]="memoryRates.lineChartType"
               ></canvas>
             </div>
-            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
+            <div fxFlex="48%" style="margin-bottom: 2em; ">
               <canvas
                 *ngIf="concurrencyRates.data.length > 0"
                 baseChart
@@ -181,7 +190,7 @@
                 [chartType]="concurrencyRates.lineChartType"
               ></canvas>
             </div>
-            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
+            <div fxFlex="48%" style="margin-bottom: 2em; ">
               <canvas
                 *ngIf="gcRates.data.length > 0"
                 baseChart
@@ -191,7 +200,7 @@
                 [chartType]="gcRates.lineChartType"
               ></canvas>
             </div>
-            <div fxFlex="48%" style="margin-bottom: 2em; height:300px;">
+            <div fxFlex="48%" style="margin-bottom: 2em;">
               <canvas
                 *ngIf="uptime.data.length > 0"
                 baseChart

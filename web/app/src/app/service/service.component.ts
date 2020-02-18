@@ -494,7 +494,7 @@ ${indent}}`;
           display: true,
           text: title
         },
-        maintainAspectRatio: false,
+        //maintainAspectRatio: false,
         animation: {
           duration: 0
         },
