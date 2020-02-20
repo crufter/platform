@@ -1,32 +1,32 @@
-<div fxLayout="row">
-  <div style="width: 25%">
+<div fxHide.lt-md fxLayout="row">
+  <div fxFlex.lt-md="50%" fxFlex="25%">
     <b style="font-weight: 700;">ID</b>
   </div>
-  <div style="width: 25%">
+  <div fxFlex.lt-md="50%" fxFlex="25%">
     <b style="font-weight: 700;">Name</b>
   </div>
-  <div style="width: 25%">
+  <div fxFlex.lt-md="50%" fxFlex="25%">
     <b style="font-weight: 700;">Time</b>
   </div>
-  <div style="width: 25%">
+  <div fxFlex.lt-md="50%" fxFlex="25%">
     <b style="font-weight: 700;">Duration</b>
   </div>
 </div>
 <br />
 <ng-container *ngFor="let traceData of traceDatasPart">
-  <div fxLayout="row">
-    <div style="width: 25%">
+  <div fxHide.lt-md fxLayout="row">
+    <div fxFlex="25%">
       <a href="#" (click)="show(traceData)"
         >{{ prettyId(traceData.traceId) }}
       </a>
     </div>
-    <div style="width: 25%">
+    <div fxFlex="25%">
       {{ getEndpointName(traceData.dataTable) }}
     </div>
-    <div style="width: 25%">
+    <div fxFlex="25%">
       {{ traceData.dataTable[1][2] | date: "short" }}
     </div>
-    <div style="width: 25%">
+    <div fxFlex="25%">
       {{ traceDuration(traceData.dataTable) }}
     </div>
   </div>
@@ -37,6 +37,72 @@
   >
     <br />Trace ID: {{ traceData.traceId }}<br />
     <google-chart [data]="traceData"></google-chart>
+  </div>
+</ng-container>
+<ng-container *ngFor="let traceData of traceDatasPart">
+  <div class="small1">
+    <div
+      fxHide.gt-sm
+      class="small"
+      fxLayoutAlign="center center"
+      fxLayout="row"
+    >
+      <div fxFlex="20%">
+        ID
+      </div>
+      <div fxFlex="20%">
+        <b style="font-weight: 700;"><a href="#" (click)="show(traceData)"
+          >{{ prettyId(traceData.traceId) }}</a>
+        </b>
+      </div>
+    </div>
+    <div
+      fxHide.gt-sm
+      class="small"
+      fxLayoutAlign="center center"
+      fxLayout="row"
+    >
+      <div fxFlex="20%">
+        Name
+      </div>
+      <div fxFlex="20%">
+        {{ getEndpointName(traceData.dataTable) }}
+      </div>
+    </div>
+    <div
+      fxHide.gt-sm
+      class="small"
+      fxLayoutAlign="center center"
+      fxLayout="row"
+    >
+      <div fxFlex="20%">
+        Time
+      </div>
+      <div fxFlex="20%">
+        {{ traceData.dataTable[1][2] | date: "short" }}
+      </div>
+    </div>
+    <div
+      fxHide.gt-sm
+      class="small"
+      fxLayoutAlign="center center"
+      fxLayout="row"
+    >
+      <div fxFlex="20%">
+        Duration
+      </div>
+      <div fxFlex="20%">
+        {{ traceDuration(traceData.dataTable) }}
+      </div>
+    </div>
+    <div
+      *ngIf="traceData.show"
+      style="width: 100%;"
+      [ngStyle]="{ 'height.px': traceData.divHeight + 25 }"
+    >
+      <br />Trace ID: {{ traceData.traceId }}<br />
+      <google-chart [data]="traceData"></google-chart>
+    </div>
   </div>
 </ng-container>
 <mat-paginator
