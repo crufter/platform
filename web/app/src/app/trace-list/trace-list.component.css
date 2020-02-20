@@ -1,4 +1,7 @@
-.small1 {
-    margin-bottom: 1em;
-  
+.small {
+  margin-bottom: 1em;
+}
+
+.full-line {
+    line-height: 2em;
 }
