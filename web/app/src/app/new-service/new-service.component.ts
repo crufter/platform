@@ -134,7 +134,7 @@ cd ` +
 make build
 # Push to GitHub
 git config --local core.hooksPath .githooks
-git add . && git commit -m "Initialising service" && git push`;
+git add . && git commit -m "Initialising service ` + this.serviceName + `" && git push`;
   }
 
   newRunCode() {
