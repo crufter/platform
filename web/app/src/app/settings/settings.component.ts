@@ -13,6 +13,25 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.token =
       this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
+      + this.us.token()
   }
 
+  languages = ["bash"];
 }
