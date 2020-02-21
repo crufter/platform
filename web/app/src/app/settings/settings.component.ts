@@ -11,26 +11,7 @@ export class SettingsComponent implements OnInit {
   constructor(private us: UserService) {}
 
   ngOnInit() {
-    this.token =
-      this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
-      + this.us.token()
+    this.token = this.us.token();
   }
 
   languages = ["bash"];
