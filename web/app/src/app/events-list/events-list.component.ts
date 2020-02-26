@@ -29,6 +29,7 @@ const eventTypesNice = {
 })
 export class EventsListComponent implements OnInit {
   @Input() events: types.Event[];
+  searched: types.Event[];
   eventsPart: types.Event[] = [];
   testEvents: types.Event[] = testEvents.default;
   query: string = "";
@@ -41,12 +42,13 @@ export class EventsListComponent implements OnInit {
 
   ngOnInit() {
     this.events = this.testEvents;
-    this.length = this.events.length
+    this.searched = this.events;
+    this.length = this.searched.length;
     this.iterator();
   }
 
   ngOnChanges(changes) {
-    this.length = this.events.length
+    this.length = this.events.length;
     this.iterator();
   }
 
@@ -101,7 +103,16 @@ export class EventsListComponent implements OnInit {
   private iterator() {
     const end = (this.currentPage + 1) * this.pageSize;
     const start = this.currentPage * this.pageSize;
-    const part = this.events.slice(start, end);
+    const part = this.searched.slice(start, end);
     this.eventsPart = part;
+  }
+
+  search() {
+    this.searched = this.events.filter(e => {
+      return e.service.name.includes(this.query);
+    });
+    this.currentPage = 0;
+    this.length = this.searched.length
+    this.iterator()
   }
 }
