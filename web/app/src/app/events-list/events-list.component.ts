@@ -41,7 +41,7 @@ export class EventsListComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.events = this.testEvents;
+    //this.events = this.testEvents;
     this.searched = this.events;
     this.length = this.searched.length;
     this.iterator();
@@ -112,7 +112,7 @@ export class EventsListComponent implements OnInit {
       return e.service.name.includes(this.query);
     });
     this.currentPage = 0;
-    this.length = this.searched.length
-    this.iterator()
+    this.length = this.searched.length;
+    this.iterator();
   }
 }
