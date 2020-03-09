@@ -6,7 +6,7 @@ weight: 11
 title: {{ .service.Name }}
 ---
 
-# Endpoints
+# {{ .service.Name }}
 
 {{ range $elem := .service.Endpoints}}
 ## {{ $elem.Name }}
@@ -14,7 +14,7 @@ title: {{ .service.Name }}
 ` + "```" + `go
 package main
 
-import "github.com/bep/kittn/auth"
+import "github.com/micro/clients"
 
 func main() {
 	api := auth.Authorize("meowmeowmeow")
@@ -52,22 +52,7 @@ let kittens = api.kittens.get();
 > The above command returns JSON structured like this:
 
 ` + "```" + `json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{{ toJSON $elem.Request 1 }}
 ` + "```" + `
 
 This endpoint retrieves all kittens.
