@@ -74,7 +74,28 @@ func generateMarkdowns(serviceName string, protoPaths []string) error {
 			rpcs[s.Name] = s
 		}))
 
-	tmpl, err := template.New(serviceName).Funcs(template.FuncMap{"toJSON": toJSON}).Parse(serviceTemplate)
+	tmpl, err := template.New(serviceName).Funcs(template.FuncMap{
+		"toJSON": toJSON,
+		"getNormalFields": func(messgeName string) []*proto.NormalField {
+			msg, ok := messages[messgeName]
+			if !ok {
+				return []*proto.NormalField{}
+			}
+			ret := []*proto.NormalField{}
+			for _, element := range msg.Elements {
+				if nf, ok := element.(*proto.NormalField); ok {
+					ret = append(ret, nf)
+				}
+			}
+			return ret
+		},
+		"commentLines": func(comment *proto.Comment) string {
+			if comment == nil {
+				return ""
+			}
+			return strings.Join(comment.Lines, "\n")
+		},
+	}).Parse(serviceTemplate)
 	if err != nil {
 		panic(err)
 	}

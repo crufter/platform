@@ -42,6 +42,12 @@ curl "http://example.com/api/kittens"
   -H "Authorization: meowmeowmeow"
   ` + "```" + `
 
+> The above command returns JSON structured like this:
+
+` + "```" + `json
+{ 1111s }
+` + "```" + `
+
   ` + "```" + `javascript
 const kittn = require('kittn');
 
@@ -55,18 +61,22 @@ let kittens = api.kittens.get();
 { sadasas }
 ` + "```" + `
 
-This endpoint retrieves all kittens.
+{{ commentLines $rpc.Comment }}
 
-### HTTP Request
+### Request Parameters
 
-` + "`" + `GET http://example.com/api/kittens` + "`" + `
+Name |  Type | Description
+--------- | --------- | ---------
+{{ range $field := (getNormalFields $rpc.RequestType) }}{{ $field.Name }} | {{ $field.Type }} | {{ commentLines $field.Comment }}
+{{ end }}
 
-### Query Parameters
+### Response Parameters
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+Name |  Type | Description
+--------- | --------- | ---------
+{{ range $field := (getNormalFields $rpc.ReturnsType) }}{{ $field.Name }} | {{ $field.Type }} | {{ commentLines $field.Comment }}
+{{ end }}
+
 
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
