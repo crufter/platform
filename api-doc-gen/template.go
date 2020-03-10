@@ -3,13 +3,13 @@ package main
 var serviceTemplate = `
 ---
 weight: 11
-title: {{ .service.Name }}
+title: {{ .serviceName }}
 ---
 
-# {{ .service.Name }}
+# {{ .serviceName }}
 
-{{ range $elem := .service.Endpoints}}
-## {{ $elem.Name }}
+{{ range $rpc := .rpcs }}
+## {{ $rpc.Name }}
 
 ` + "```" + `go
 package main
@@ -52,7 +52,7 @@ let kittens = api.kittens.get();
 > The above command returns JSON structured like this:
 
 ` + "```" + `json
-{{ toJSON $elem.Request 1 }}
+{ sadasas }
 ` + "```" + `
 
 This endpoint retrieves all kittens.
