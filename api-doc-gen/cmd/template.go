@@ -74,6 +74,16 @@ Name |  Type | Description
 {{ range $field := (getNormalFields $rpc.ReturnsType) }}{{ $field.Name }} | {{ $field.Type }} | {{ commentLines $field.Comment }}
 {{ end }}
 
+{{ range $messageName := (messagesUsedByReqRsp $rpc) }}
+### Message {{ $messageName }}
+
+Name |  Type | Description
+--------- | --------- | ---------
+{{ range $field := (getNormalFields $messageName) }}{{ $field.Name }} | {{ $field.Type }} | {{ commentLines $field.Comment }}
+{{ end }}
+{{ end }}
+
+### 
 
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
